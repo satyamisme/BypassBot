@@ -323,20 +323,17 @@ def uploadee(url: str) -> str:
 
 def mdisk(url):
     
-    api = "https://api.emilyx.in/api/direct"
-    client = cloudscraper.create_scraper(allow_brotli=False)
-    resp = client.get(url)
-    if resp.status_code == 404:
-        return "File not found/The link you entered is wrong!"
-    try:
-        resp = client.post(api, json={"type": "mdisk", "url": url})
-        res = resp.json()
-    except BaseException:
-        return "API UnResponsive / Invalid Link !"
-    if res["success"] is True:
-        return res["url"]
-    else:
-        return res["msg"]
+    header = {
+        'Accept': '*/*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'Referer': 'https://mdisk.me/',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+    	 }
+
+    id = url.split("/")[-1]
+    URL = f'https://diskuploader.entertainvideo.com/v1/file/cdnurl?param={id}'
+    return requests.get(url=URL, headers=header).json()['source']
 
 def wetransfer(url):
     api = "https://api.emilyx.in/api/direct"
